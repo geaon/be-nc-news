@@ -4,6 +4,7 @@ const {
   getTopics,
   getArticleById,
   getArticles,
+  getArticleComments,
 } = require("./controllers/controllers");
 const endpoints = require("./endpoints.json");
 
@@ -13,9 +14,11 @@ app.get("/api", (request, response) => {
 
 app.get("/api/topics", getTopics);
 
+app.get("/api/articles/:article_id", getArticleById);
+
 app.get("/api/articles", getArticles);
 
-app.get("/api/articles/:article_id", getArticleById);
+app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.use((err, request, response, next) => {
   if (err.code === "22P02") {
@@ -32,4 +35,5 @@ app.use((err, request, response, next) => {
     console.log(err);
   }
 });
+
 module.exports = app;
