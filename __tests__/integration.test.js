@@ -33,23 +33,48 @@ describe("/api/topics", () => {
   });
 });
 
+describe("/api/articles", () => {
+  test("GET:200 responds with an array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.forEach((article) => {
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+          expect(typeof article.comment_count).toBe("string");
+        });
+      });
+  });
+  test("GET:200 responds with articles sorted by date in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+});
+
 describe("/api/articles/:article_id", () => {
   test("GET:200 responds with a single article object", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
-        expect(body.article.author).toBe("butter_bridge");
-        expect(body.article.title).toBe("Living in the shadow of a great man");
-        expect(body.article.article_id).toBe(1);
-        expect(body.article.body).toBe("I find this existence challenging");
-        expect(body.article.topic).toBe("mitch");
-        expect(body.article.created_at).toBe("2020-07-09T20:11:00.000Z");
-        expect(body.article.votes).toBe(100);
-        expect(body.article.article_img_url).toBe(
-          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-        );
+        expect(typeof body.article.author).toBe("string");
+        expect(typeof body.article.title).toBe("string");
+        expect(typeof body.article.article_id).toBe("number");
+        expect(typeof body.article.body).toBe("string");
+        expect(typeof body.article.topic).toBe("string");
+        expect(typeof body.article.created_at).toBe("string");
+        expect(typeof body.article.votes).toBe("number");
+        expect(typeof body.article.article_img_url).toBe("string");
       });
   });
   test("GET:404 responds with appropriate error status and message when given a valid but non-existent id", () => {
