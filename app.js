@@ -6,6 +6,7 @@ const {
   getArticles,
   getArticleComments,
   postComments,
+  patchArticle,
 } = require("./controllers/controllers");
 const endpoints = require("./endpoints.json");
 
@@ -24,6 +25,8 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.post("/api/articles/:article_id/comments", postComments);
+
+app.patch("/api/articles/:article_id", patchArticle);
 
 app.use((err, request, response, next) => {
   if (err.code === "22P02" || err.code === "23502" || err.code === "23503") {
