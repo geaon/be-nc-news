@@ -4,6 +4,7 @@ const {
   fetchArticles,
   fetchArticleComments,
   insertComment,
+  updateArticle,
 } = require("../models/models");
 
 exports.getTopics = (request, response, next) => {
@@ -57,6 +58,21 @@ exports.postComments = (request, response, next) => {
     })
     .then((comment) => {
       response.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.patchArticle = (request, response, next) => {
+  const { inc_votes } = request.body;
+  const { article_id } = request.params;
+  fetchArticleById(article_id)
+    .then(() => {
+      return updateArticle(article_id, inc_votes);
+    })
+    .then((article) => {
+      response.status(201).send({ article });
     })
     .catch((err) => {
       next(err);

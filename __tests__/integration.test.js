@@ -25,6 +25,7 @@ describe("/api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
+        expect(body.topics.length).not.toBe(0);
         body.topics.forEach((topic) => {
           expect(typeof topic.slug).toBe("string");
           expect(typeof topic.description).toBe("string");
@@ -73,6 +74,7 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
+        expect(body.articles.length).not.toBe(0);
         body.articles.forEach((article) => {
           expect(typeof article.author).toBe("string");
           expect(typeof article.title).toBe("string");
@@ -186,6 +188,65 @@ describe("/api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/2/comments")
       .send({ username: "georgia", body: "riveting article" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toEqual("bad request");
+      });
+  });
+});
+
+describe("/api/articles/:article_id", () => {
+  test("PATCH:201 - updates a given article by adding 1 vote", () => {
+    return request(app)
+      .patch("/api/articles/5")
+      .send({ inc_votes: 1 })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({
+          article_id: 5,
+          title: "UNCOVERED: catspiracy to bring down democracy",
+          topic: "cats",
+          author: "rogersop",
+          body: "Bastet walks amongst us, and the cats are taking arms!",
+          created_at: "2020-08-03T13:14:00.000Z",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          votes: 1,
+        });
+      });
+  });
+  test("PATCH:201 - updates a given article by adding multiple votes", () => {
+    return request(app)
+      .patch("/api/articles/5")
+      .send({ inc_votes: 100 })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({
+          article_id: 5,
+          title: "UNCOVERED: catspiracy to bring down democracy",
+          topic: "cats",
+          author: "rogersop",
+          body: "Bastet walks amongst us, and the cats are taking arms!",
+          created_at: "2020-08-03T13:14:00.000Z",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          votes: 100,
+        });
+      });
+  });
+  test("PATCH:404 - responds with appropriate error status and message when given a valid but non-existent article_id", () => {
+    return request(app)
+      .patch("/api/articles/1800")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toEqual("article does not exist");
+      });
+  });
+  test("PATCH:400 - responds with an appropriate error status and message when given an invalid article_id", () => {
+    return request(app)
+      .patch("/api/articles/no")
+      .send({ inc_votes: 1 })
       .expect(400)
       .then(({ body }) => {
         expect(body.message).toEqual("bad request");
