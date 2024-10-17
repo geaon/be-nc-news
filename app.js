@@ -7,6 +7,7 @@ const {
   getArticleComments,
   postComments,
   patchArticle,
+  deleteComment,
 } = require("./controllers/controllers");
 const endpoints = require("./endpoints.json");
 
@@ -28,6 +29,8 @@ app.post("/api/articles/:article_id/comments", postComments);
 
 app.patch("/api/articles/:article_id", patchArticle);
 
+app.delete("/api/comments/:comment_id", deleteComment);
+
 app.use((err, request, response, next) => {
   if (err.code === "22P02" || err.code === "23502" || err.code === "23503") {
     response.status(400).send({ message: "bad request" });
@@ -45,3 +48,5 @@ app.use((err, request, response, next) => {
 });
 
 module.exports = app;
+
+// Remember to add a description of this endpoint to your /api endpoint.
