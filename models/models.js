@@ -81,3 +81,9 @@ exports.removeComment = (comment_id) => {
       return rows;
     });
 };
+
+exports.fetchUsers = () => {
+  return db.query("SELECT * FROM users;").then((result) => {
+    return result.rows;
+  });
+};
