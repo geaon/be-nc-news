@@ -137,3 +137,58 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id/comments", () => {
+  test("POST:201 - adds a comment to the given article", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ username: "lurker", body: "riveting article" })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toMatchObject({
+          comment_id: expect.any(Number),
+          votes: 0,
+          created_at: expect.any(String),
+          author: "lurker",
+          body: "riveting article",
+          article_id: 2,
+        });
+      });
+  });
+  test("POST:404 responds with appropriate error status and message when given a valid but non-existent article_id", () => {
+    return request(app)
+      .post("/api/articles/1800/comments")
+      .send({ username: "lurker", body: "riveting article" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toEqual("article does not exist");
+      });
+  });
+  test("POST:400 responds with an appropriate error status and message when given an invalid article_id", () => {
+    return request(app)
+      .post("/api/articles/no/comments")
+      .send({ username: "lurker", body: "riveting article" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toEqual("bad request");
+      });
+  });
+  test("POST:400 responds with an appropriate error status and message when comment object is missing a property", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ body: "riveting article" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toEqual("bad request");
+      });
+  });
+  test("POST:400 responds with an appropriate error status and message when given username of user who doesnt exist", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ username: "georgia", body: "riveting article" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toEqual("bad request");
+      });
+  });
+});
