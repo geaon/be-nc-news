@@ -48,6 +48,7 @@ describe("/api/articles/:article_id", () => {
         expect(typeof body.article.created_at).toBe("string");
         expect(typeof body.article.votes).toBe("number");
         expect(typeof body.article.article_img_url).toBe("string");
+        expect(typeof body.article.comment_count).toBe("string");
       });
   });
   test("GET:404 responds with appropriate error status and message when given a valid but non-existent id", () => {
