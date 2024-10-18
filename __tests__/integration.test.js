@@ -95,6 +95,9 @@ describe("/api/articles", () => {
         expect(body.articles).toBeSortedBy("created_at", { descending: true });
       });
   });
+});
+
+describe("/api/articles?sort_by=...", () => {
   test("GET:200 takes a sort_by query and responds with articles sorted by the given column", () => {
     return request(app)
       .get("/api/articles?sort_by=author")
@@ -111,12 +114,36 @@ describe("/api/articles", () => {
         expect(body.message).toBe("bad request");
       });
   });
+});
+
+describe("/api/articles?order=...", () => {
   test("GET:200 takes an order query and responds with articles ordered ascending or descending", () => {
     return request(app)
       .get("/api/articles?sort_by=title&order=asc")
       .expect(200)
       .then(({ body }) => {
         expect(body.articles).toBeSortedBy("title", { ascending: true });
+      });
+  });
+});
+
+describe("/api/articles?topic=...", () => {
+  test("GET:200 takes a topic query and responds with articles of that topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) =>
+        body.articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        })
+      );
+  });
+  test("GET:404 responds with appropriate error status and message when given a valid but non-existent topic", () => {
+    return request(app)
+      .get("/api/articles?topic=boats")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toEqual("topic does not exist");
       });
   });
 });
