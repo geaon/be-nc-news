@@ -95,6 +95,30 @@ describe("/api/articles", () => {
         expect(body.articles).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test("GET:200 takes a sort_by query and responds with articles sorted by the given column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+  test("GET:400 returns appropriate error status and message when given an invlaid sort_by", () => {
+    return request(app)
+      .get("/api/articles?sort_by=made_up")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("bad request");
+      });
+  });
+  test("GET:200 takes an order query and responds with articles ordered ascending or descending", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("title", { ascending: true });
+      });
+  });
 });
 
 describe("/api/articles/:article_id/comments", () => {
@@ -184,13 +208,13 @@ describe("/api/articles/:article_id/comments", () => {
         expect(body.message).toEqual("bad request");
       });
   });
-  test("POST:400 responds with an appropriate error status and message when given username of user who doesnt exist", () => {
+  test("POST:404 responds with an appropriate error status and message when given username of user who doesnt exist", () => {
     return request(app)
       .post("/api/articles/2/comments")
       .send({ username: "georgia", body: "riveting article" })
-      .expect(400)
+      .expect(404)
       .then(({ body }) => {
-        expect(body.message).toEqual("bad request");
+        expect(body.message).toEqual("user does not exist");
       });
   });
 });
