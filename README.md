@@ -17,7 +17,9 @@ To run the project on your local machine, ensure you have the following installe
 __--Node.js version 22.8.0 or later__<br/>
 __--PostgreSQL version 17 or later__
 
-Run npm install in your terminal and ensure you have the required dependencies:<br/>
+Run __--npm install__ in your terminal.
+
+Ensure you have the required dependencies:<br/>
 __"dependencies": {<br/>
 "cors": "^2.8.5",<br/>
 "dotenv": "^16.0.0",<br/>
