@@ -13,14 +13,17 @@ You can use this API to view articles, topics, users and comments within the nc_
 
 ## Project Setup
 
-To run the project on your local machine, ensure you have the following installed and clone the repository:<br/>
-__--Node.js version 22.8.0 or later__<br/>
-__--PostgreSQL version 17 or later__
+To run the project on your local machine, ensure you have the following installed:<br/>
+**--Node.js version 22.8.0 or later**<br/>
+**--PostgreSQL version 17 or later**
 
-Run __--npm install__ in your terminal.
+Fork and clone the repository:<br/>
+https://github.com/geaon/be-nc-news
+
+Run **--npm install** in your terminal.
 
 Ensure you have the required dependencies:<br/>
-__"dependencies": {<br/>
+**"dependencies": {<br/>
 "cors": "^2.8.5",<br/>
 "dotenv": "^16.0.0",<br/>
 "express": "^4.21.1",<br/>
@@ -28,17 +31,17 @@ __"dependencies": {<br/>
 "pg-format": "^1.0.4",<br/>
 "sorted": "^0.1.1",<br/>
 "supertest": "^7.0.0"<br/>
-},__
+},**
 
 Add test and development environments using PGDATABASE by creating the files below. These are essential for connecting to the correct databases:<br/>
---create a __.env.test__ file with __PGDATABASE = nc_news_test__<br/>
---create a __.env.development__ file with __PGDATABASE = nc_news__<br/>
+--create a **.env.test** file with **PGDATABASE = nc_news_test**<br/>
+--create a **.env.development** file with **PGDATABASE = nc_news**<br/>
 
 To seed the local database, run:<br/>
-__--npm run seed__
+**--npm run seed**
 
 To run the test suite, run:<br/>
-__--npm test__
+**--npm test**
 
 ---
 
